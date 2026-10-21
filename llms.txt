@@ -1,0 +1,7 @@
+# Shell Market (shellmkt.com)
+
+> Public shell companies tracked from their own SEC filings: which are empty but still trade, who takes control of them, and what anti-takeover devices (poison pills, blank-check preferred stock) and warrants they carry. Facts only, cited by SEC accession number; no investment advice. Works with 8K10Q (https://8k10q.com) and Warrant Wire (https://warrantwire.com). Built 2026-10-21; the shell list is being built.
+
+## Definitions used
+- Shell company: 17 CFR 240.12b-2 - no or nominal operations, and no or nominal assets, only cash and cash equivalents, or cash plus nominal other assets. Each Form 10-K asks the company to check whether it is a shell company.
+- Change in control: Form 8-K Item 5.01. Change in shell company status: Form 8-K Item 5.06. Large holders: Schedule 13D. Rights plans (poison pills): Form 8-K Item 3.03.
