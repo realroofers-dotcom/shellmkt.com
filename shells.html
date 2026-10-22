@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!-- BUILT 2026-10-22 · shellmkt shells-1a. Mark (2026-10-22): "we need to show companies and prices that are actively trading on shellmkt.com and onclick the details should pop up". Data: shellwatch worker (each company's own answer to the shell-company question on its latest annual report; prices from public market data). Facts only. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shell list — public shell companies that trade | ShellMKT</title>
+<meta name="description" content="The list of U.S. public companies that say on their own annual report that they are shell companies, with the ones still trading, their price and volume. Click any company for its details. From the SEC filings; not investment advice.">
+<meta name="keywords" content="shell company list, public shells trading, shell companies OTC, shell company stock price, Rule 12b-2 shell company, pubco list, clean shell, trading shell, reverse merger shell, shell company money laundering, hidden ownership">
+<link rel="canonical" href="https://shellmkt.com/shells.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root{--bg:#f7f6f2;--ink:#14212b;--ink2:#46525c;--card:#fff;--line:#d9d6cc;--acc:#8a5a00;--acc2:#1f4e79;--row:#fbfaf6}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#11161b;--ink:#ecebe6;--ink2:#a9b0b6;--card:#1a2129;--line:#2c3540;--acc:#e0a63a;--acc2:#7fb0e0;--row:#161c22}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 40px}
+a{color:var(--acc2)}
+header{display:flex;align-items:center;gap:10px}
+.brand{font:800 22px/1 system-ui,sans-serif;text-decoration:none;color:var(--ink)}.brand span{color:var(--acc)}
+h1{font-size:clamp(24px,4.5vw,34px);margin:18px 0 6px}
+.lead{color:var(--ink2);margin:0 0 14px;max-width:760px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0 12px}
+.bar input{flex:1 1 220px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font-size:16px}
+.count{font-size:14px;color:var(--ink2)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);padding:10px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer}
+td{padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}
+tbody tr{cursor:pointer}tbody tr:hover{background:var(--row)}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+.tk{font-weight:800;color:var(--acc2)}
+.note{font-size:13px;color:var(--ink2);margin-top:10px}
+dialog{border:0;border-radius:16px;padding:0;max-width:640px;width:calc(100% - 32px);background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.dh{display:flex;justify-content:space-between;align-items:start;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.dh h2{margin:0;font-size:20px}.dh small{color:var(--ink2)}
+.x{border:0;background:none;font-size:26px;line-height:1;cursor:pointer;color:var(--ink2)}
+.db{padding:14px 18px 18px}
+.box{border-left:3px solid var(--acc);padding:8px 12px;margin:8px 0 14px;font-style:italic;color:var(--ink2);background:var(--row)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14.5px;margin-bottom:12px}.kv b{color:var(--ink2);font-weight:600}
+.links a{display:inline-block;margin:4px 12px 0 0;font-weight:700}
+svg.spark{width:100%;height:70px;display:block;margin:6px 0 2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="brand" href="/">SHELL<span>MKT</span></a></header>
+<h1>Public shells that are trading</h1>
+<p class="lead">Each company below answered <b>YES</b> to the shell-company question on the cover of its own latest annual report. These are the ones whose stock traded in the last five trading days. Click a company for its details.</p>
+<div class="bar"><input id="f" type="search" placeholder="Filter by ticker or name"><span class="count" id="cnt">Loading…</span></div>
+<div class="tw"><table><thead><tr><th data-k="ticker">Ticker</th><th data-k="name">Company</th><th data-k="price" class="n">Last price</th><th data-k="vol5" class="n">Shares traded, 5 days</th><th data-k="exchange">Market</th><th data-k="filed">Annual report</th></tr></thead><tbody id="rows"></tbody></table></div>
+<p class="note" id="prog"></p>
+<p class="note">From the companies' own SEC filings and public market data. Being on this list means only that the company says it is a shell company; it says nothing about wrongdoing. Not investment advice.</p>
+</div>
+<dialog id="dlg"><div class="dh"><div><h2 id="dT"></h2><small id="dS"></small></div><button class="x" onclick="dlg.close()" aria-label="Close">&times;</button></div><div class="db" id="dB"></div></dialog>
+<script>
+var API="https://shellwatch.realroofers.workers.dev", all=[], sortK="vol5", sortD=-1, dlg=document.getElementById("dlg");
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function num(n){return n==null?"":Number(n).toLocaleString("en-US")}
+function px(n){return n==null?"":"$"+(n<1?Number(n).toFixed(4):Number(n).toFixed(2))}
+function draw(){var q=document.getElementById("f").value.trim().toLowerCase();
+ var r=all.filter(function(x){return !q||String(x.ticker).toLowerCase().indexOf(q)>=0||String(x.name).toLowerCase().indexOf(q)>=0});
+ r.sort(function(a,b){var A=a[sortK],B=b[sortK];if(A==null)return 1;if(B==null)return -1;return (A>B?1:A<B?-1:0)*sortD});
+ document.getElementById("rows").innerHTML=r.map(function(x){return '<tr data-c="'+x.cik+'"><td class="tk">'+esc(x.ticker)+'</td><td>'+esc(x.name)+'</td><td class="n">'+px(x.price)+'</td><td class="n">'+num(x.vol5)+'</td><td>'+esc(x.exchange||"")+'</td><td>'+esc(x.filed||"")+'</td></tr>'}).join("")||'<tr><td colspan="6">None yet. The list fills in as each annual report is read.</td></tr>';
+ document.getElementById("cnt").textContent=r.length+" trading shells"}
+document.getElementById("f").oninput=draw;
+document.querySelectorAll("th").forEach(function(th){th.onclick=function(){var k=th.getAttribute("data-k");if(sortK===k)sortD=-sortD;else{sortK=k;sortD=(k==="ticker"||k==="name")?1:-1}draw()}});
+document.getElementById("rows").onclick=function(e){var tr=e.target.closest("tr[data-c]");if(tr)open(tr.getAttribute("data-c"))};
+function spark(p){if(!p||p.length<2)return"";var v=p.slice().reverse(),mn=Math.min.apply(null,v.map(function(x){return x.c})),mx=Math.max.apply(null,v.map(function(x){return x.c})),w=600,h=70,d=mx-mn||1;
+ return '<svg class="spark" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><polyline fill="none" stroke="currentColor" stroke-width="2" points="'+v.map(function(x,i){return (i*(w/(v.length-1))).toFixed(1)+","+(h-4-(x.c-mn)/d*(h-8)).toFixed(1)}).join(" ")+'"/></svg>'}
+function open(cik){document.getElementById("dT").textContent="Loading…";document.getElementById("dS").textContent="";document.getElementById("dB").innerHTML="";dlg.showModal();
+ fetch(API+"/detail?cik="+cik).then(function(r){return r.json()}).then(function(d){if(!d.ok){document.getElementById("dB").textContent="Not found.";return}
+  var c=d.company,p=d.prices||[];document.getElementById("dT").textContent=c.name+" ("+c.ticker+")";
+  document.getElementById("dS").textContent=(c.exchange||"")+(d.incorporated?" · incorporated in "+d.incorporated:"")+(d.city?" · "+d.city:"");
+  var last=p[0];
+  document.getElementById("dB").innerHTML='<div><b>On its annual report ('+esc(c.form||"10-K")+', filed '+esc(c.filed)+'), the company answered:</b></div><div class="box">'+esc(c.box_text||"")+'</div>'
+   +'<div class="kv"><b>Last price</b><span>'+(last?px(last.c)+" on "+esc(last.d):"—")+'</span><b>Shares traded, 5 days</b><span>'+num(p.slice(0,5).reduce(function(s,x){return s+(x.v||0)},0))+'</span>'+(d.industry?'<b>Industry (SEC code)</b><span>'+esc(d.industry)+'</span>':'')+'<b>SEC number (CIK)</b><span>'+esc(c.cik)+'</span></div>'
+   +(p.length>1?'<div style="font-size:13px;color:var(--ink2)">Closing price, last '+p.length+' trading days</div>'+spark(p):'')
+   +'<div class="links"><a href="'+esc(d.report_url)+'" target="_blank" rel="noopener">The annual report</a><a href="'+esc(d.edgar_url)+'" target="_blank" rel="noopener">All its SEC filings</a><a href="'+esc(d.warrantwire_url)+'" target="_blank" rel="noopener">Warrant Wire report</a></div>'
+   +'<p class="note">Who took control, the people involved and any poison pill are being added as our workers read the filings.</p>'})
+ .catch(function(){document.getElementById("dB").textContent="Could not load. Try again."})}
+fetch(API+"/list").then(function(r){return r.json()}).then(function(d){all=d.trading||[];draw();
+ var c=d.counts||{},done=(c.yes||0)+(c.no||0)+(c.unknown||0),tot=done+(c.queued||0)+(c.failed||0);
+ document.getElementById("prog").textContent="Annual reports read so far: "+num(done)+" of "+num(tot)+" listed companies ("+num(c.yes||0)+" say they are shells). The list grows as the rest are read."})
+ .catch(function(){document.getElementById("cnt").textContent="Could not load the list."});
+</script>
+</body>
+</html>
