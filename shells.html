@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILT 2026-10-22 · shellmkt shells-1a. Mark (2026-10-22): "we need to show companies and prices that are actively trading on shellmkt.com and onclick the details should pop up". Data: shellwatch worker (each company's own answer to the shell-company question on its latest annual report; prices from public market data). Facts only. -->
+<!-- BUILT 2026-11-15 · shellmkt shells-1b: market value, shares outstanding, last offering (Mark: "on shellmkt we need market cap and shares outstanding and last offering"). shells-1a 2026-10-22. Mark (2026-10-22): "we need to show companies and prices that are actively trading on shellmkt.com and onclick the details should pop up". Data: shellwatch worker (each company's own answer to the shell-company question on its latest annual report; prices from public market data). Facts only. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -53,7 +53,7 @@ svg.spark{width:100%;height:70px;display:block;margin:6px 0 2px}
 <h1>Public shells that are trading</h1>
 <p class="lead">Each company below answered <b>YES</b> to the shell-company question on the cover of its own latest annual report. These are the ones whose stock traded in the last five trading days. Click a company for its details.</p>
 <div class="bar"><input id="f" type="search" placeholder="Filter by ticker or name"><span class="count" id="cnt">Loading…</span></div>
-<div class="tw"><table><thead><tr><th data-k="ticker">Ticker</th><th data-k="name">Company</th><th data-k="price" class="n">Last price</th><th data-k="vol5" class="n">Shares traded, 5 days</th><th data-k="exchange">Market</th><th data-k="filed">Annual report</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div class="tw"><table><thead><tr><th data-k="ticker">Ticker</th><th data-k="name">Company</th><th data-k="price" class="n">Last price</th><th data-k="mktcap" class="n">Market value</th><th data-k="shares" class="n">Shares outstanding</th><th data-k="last_offer_date">Last offering</th><th data-k="vol5" class="n">Shares traded, 5 days</th><th data-k="exchange">Market</th><th data-k="filed">Annual report</th></tr></thead><tbody id="rows"></tbody></table></div>
 <p class="note" id="prog"></p>
 <p class="note">From the companies' own SEC filings and public market data. Being on this list means only that the company says it is a shell company; it says nothing about wrongdoing. Not investment advice.</p>
 </div>
@@ -62,11 +62,13 @@ svg.spark{width:100%;height:70px;display:block;margin:6px 0 2px}
 var API="https://shellwatch.realroofers.workers.dev", all=[], sortK="vol5", sortD=-1, dlg=document.getElementById("dlg");
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function num(n){return n==null?"":Number(n).toLocaleString("en-US")}
+function mv(n){if(n==null)return"";return n>=1e9?"$"+(n/1e9).toFixed(1)+"B":n>=1e6?"$"+(n/1e6).toFixed(1)+"M":n>=1e3?"$"+Math.round(n/1e3)+"K":"$"+Math.round(n)}
+function offer(x){if(!x.last_offer_date)return"";var u=x.last_offer_acc?"https://www.sec.gov/Archives/edgar/data/"+x.cik+"/"+x.last_offer_acc.replace(/-/g,"")+"/"+x.last_offer_acc+"-index.htm":"";return (u?'<a href="'+u+'" target="_blank" rel="noopener">':"")+esc(x.last_offer_date)+" · "+esc(x.last_offer_form)+(u?"</a>":"")}
 function px(n){return n==null?"":"$"+(n<1?Number(n).toFixed(4):Number(n).toFixed(2))}
 function draw(){var q=document.getElementById("f").value.trim().toLowerCase();
  var r=all.filter(function(x){return !q||String(x.ticker).toLowerCase().indexOf(q)>=0||String(x.name).toLowerCase().indexOf(q)>=0});
  r.sort(function(a,b){var A=a[sortK],B=b[sortK];if(A==null)return 1;if(B==null)return -1;return (A>B?1:A<B?-1:0)*sortD});
- document.getElementById("rows").innerHTML=r.map(function(x){return '<tr data-c="'+x.cik+'"><td class="tk">'+esc(x.ticker)+'</td><td>'+esc(x.name)+'</td><td class="n">'+px(x.price)+'</td><td class="n">'+num(x.vol5)+'</td><td>'+esc(x.exchange||"")+'</td><td>'+esc(x.filed||"")+'</td></tr>'}).join("")||'<tr><td colspan="6">None yet. The list fills in as each annual report is read.</td></tr>';
+ document.getElementById("rows").innerHTML=r.map(function(x){return '<tr data-c="'+x.cik+'"><td class="tk">'+esc(x.ticker)+'</td><td>'+esc(x.name)+'</td><td class="n">'+px(x.price)+'</td><td class="n">'+mv(x.mktcap)+'</td><td class="n">'+num(x.shares)+'</td><td>'+offer(x)+'</td><td class="n">'+num(x.vol5)+'</td><td>'+esc(x.exchange||"")+'</td><td>'+esc(x.filed||"")+'</td></tr>'}).join("")||'<tr><td colspan="9">None yet. The list fills in as each annual report is read.</td></tr>';
  document.getElementById("cnt").textContent=r.length+" trading shells"}
 document.getElementById("f").oninput=draw;
 document.querySelectorAll("th").forEach(function(th){th.onclick=function(){var k=th.getAttribute("data-k");if(sortK===k)sortD=-sortD;else{sortK=k;sortD=(k==="ticker"||k==="name")?1:-1}draw()}});
@@ -79,7 +81,7 @@ function open(cik){document.getElementById("dT").textContent="Loading…";docume
   document.getElementById("dS").textContent=(c.exchange||"")+(d.incorporated?" · incorporated in "+d.incorporated:"")+(d.city?" · "+d.city:"");
   var last=p[0];
   document.getElementById("dB").innerHTML='<div><b>On its annual report ('+esc(c.form||"10-K")+', filed '+esc(c.filed)+'), the company answered:</b></div><div class="box">'+esc(c.box_text||"")+'</div>'
-   +'<div class="kv"><b>Last price</b><span>'+(last?px(last.c)+" on "+esc(last.d):"—")+'</span><b>Shares traded, 5 days</b><span>'+num(p.slice(0,5).reduce(function(s,x){return s+(x.v||0)},0))+'</span>'+(d.industry?'<b>Industry (SEC code)</b><span>'+esc(d.industry)+'</span>':'')+'<b>SEC number (CIK)</b><span>'+esc(c.cik)+'</span></div>'
+   +'<div class="kv"><b>Last price</b><span>'+(last?px(last.c)+" on "+esc(last.d):"—")+'</span>'+(c.shares?'<b>Shares outstanding</b><span>'+num(c.shares)+' (as of '+esc(c.shares_as_of)+')</span><b>Market value</b><span>'+(last?mv(c.shares*last.c):'—')+'</span>':'')+(c.last_offer_date?'<b>Last offering</b><span>'+offer(c)+'</span>':'')+'<b>Shares traded, 5 days</b><span>'+num(p.slice(0,5).reduce(function(s,x){return s+(x.v||0)},0))+'</span>'+(d.industry?'<b>Industry (SEC code)</b><span>'+esc(d.industry)+'</span>':'')+'<b>SEC number (CIK)</b><span>'+esc(c.cik)+'</span></div>'
    +(p.length>1?'<div style="font-size:13px;color:var(--ink2)">Closing price, last '+p.length+' trading days</div>'+spark(p):'')
    +'<div class="links"><a href="'+esc(d.report_url)+'" target="_blank" rel="noopener">The annual report</a><a href="'+esc(d.edgar_url)+'" target="_blank" rel="noopener">All its SEC filings</a><a href="'+esc(d.warrantwire_url)+'" target="_blank" rel="noopener">Warrant Wire report</a></div>'
    +'<p class="note">Who took control, the people involved and any poison pill are being added as our workers read the filings.</p>'})
