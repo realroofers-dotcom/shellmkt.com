@@ -91,5 +91,6 @@ fetch(API+"/list").then(function(r){return r.json()}).then(function(d){all=d.tra
  document.getElementById("prog").textContent="Annual reports read so far: "+num(done)+" of "+num(tot)+" listed companies ("+num(c.yes||0)+" say they are shells). The list grows as the rest are read."})
  .catch(function(){document.getElementById("cnt").textContent="Could not load the list."});
 </script>
+<script src="https://adhotbox.com/house.js" defer></script>
 </body>
 </html>
