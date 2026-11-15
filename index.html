@@ -112,7 +112,7 @@ details.more{background:var(--card);border:1px solid var(--line);border-radius:1
     +'<div class="r">'+I.val+(x.facts_at||x.shares?mv(x.mktcap)+' <em>value · '+sh(x.shares)+' shares</em>':'<em>value: reading</em>')+'</div>'
     +'<div class="r">'+I.off+(x.last_offer_date?esc(x.last_offer_date)+' <em>'+esc(String(x.last_offer_form).replace(" (unregistered sale)",""))+'</em>':(x.facts_at?'<em>no offering found</em>':'<em>offering: reading</em>'))+'</div>'
     +meet(x)+(x.facts_at?'<div class="r">'+I.pill+(x.pill_date?'<b style="color:#e25b45">Poison pill</b> <em>'+esc(x.pill_date)+'</em>':'<em>no poison pill</em>')+'</div>':'')
-    +'<a class="who" href="https://8k10q.com/company.html?t='+encodeURIComponent(x.ticker)+'">Who is the shell &rarr;</a></div>'}).join("")||'<p>The list fills in as each annual report is read.</p>'})
+    +'<a class="who" href="https://8k10q.com/room?t='+encodeURIComponent(x.ticker)+'#cards">Who is the shell &rarr;</a></div>'}).join("")||'<p>The list fills in as each annual report is read.</p>'})
  .catch(function(){document.getElementById("shgrid").innerHTML='<p>Could not load the shells. <a href="/shells.html">Try the full list.</a></p>'});
 })();
 </script>
