@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILT 2026-10-21 · shellmkt home-1d (money laundering in the meta and lead, as a known use of shells; no company accused). Mark (2026-10-21): "thats where we should keep a list and please build the meta because these shells stay as a mystery to most". Facts only; the list itself is being built (no figures published until Mark has tested them). Shares data with 8k10q.com and warrantwire.com. -->
+<!-- BUILT 2026-11-15 · shellmkt home-2a (icon driven, the shells first as cards: price, cash inside, value, shares, last offering, Who is the shell -> 8K10Q). Before: home-1d 2026-10-21 (money laundering in the meta and lead, as a known use of shells; no company accused). Mark (2026-10-21): "thats where we should keep a list and please build the meta because these shells stay as a mystery to most". Facts only; the list itself is being built (no figures published until Mark has tested them). Shares data with 8k10q.com and warrantwire.com. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -66,13 +66,51 @@ footer a{color:var(--acc2)}
   <div class="brand">SHELL<span>MKT</span></div>
 </header>
 
-<h1>Empty companies that still trade. Who grabs them, and what is inside.</h1>
-<p class="lead">A public shell keeps its ticker and its stockholders with little or no business behind it. Shells are a known tool for hiding who is in control and for laundering money. We read the SEC filings to show which ones are empty, who takes control, and what is loaded inside.</p>
-
-<div style="background:var(--card);border:2px solid var(--acc);border-radius:14px;padding:16px 18px;margin:0 0 22px">
-  <b style="font-size:18px">What is a shell company?</b>
-  <p style="margin:6px 0 0">A public company with <b>no real business</b>: no or nominal operations, and little or nothing in assets beyond cash. It still has a ticker, stockholders and a seat on the market, which is what makes it valuable to whoever takes control. That is the SEC&rsquo;s own test (17 CFR 240.12b-2), and every annual report must say yes or no.</p>
+<!-- home-2a, 15 Nov 2026. Mark: "on shellmkt.com I think it should be icon driven and the companies that are shells should be seen on the site first not all the text because people dont read. When they get there it should say shell companies trading. and there is data there that we will get. WHO IS THE SHELL which relates back to 8k10q and the cards, cash balance etc" -->
+<h1 style="margin:18px 0 4px">Shell companies trading <span id="hcount" style="color:var(--acc)"></span></h1>
+<p style="margin:0 0 14px;color:var(--ink2);font-size:15px">Each one checked <b>YES</b> to "shell company" on its own annual report.</p>
+<div class="ibar">
+  <span><svg viewBox="0 0 24 24"><path d="M4 18l5-6 4 3 7-9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Price</span>
+  <span><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/></svg>Cash inside</span>
+  <span><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Value · shares</span>
+  <span><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 12h7M9 16h7" stroke="currentColor" stroke-width="2"/></svg>Last offering</span>
+  <span><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>Who is the shell</span>
 </div>
+<div class="shgrid" id="shgrid"><p style="color:var(--ink2)">Loading the shells&hellip;</p></div>
+<p style="margin:14px 0 26px"><a href="/shells.html" style="font-weight:700;color:var(--acc2)">See every trading shell, sortable &rarr;</a></p>
+<style>
+.ibar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}.ibar span{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:30px;padding:5px 12px;font-size:13.5px;font-weight:600}
+.ibar svg,.sc svg{width:18px;height:18px;color:var(--acc2);flex:0 0 auto}
+.shgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.sc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.sc .t{display:flex;justify-content:space-between;align-items:baseline}.sc .t b{font-size:22px;letter-spacing:.02em}.sc .t span{font-size:18px;font-weight:700}
+.sc .n{font-size:13.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc .r{display:flex;align-items:center;gap:6px;font-size:14px}.sc .r em{font-style:normal;color:var(--ink2);font-size:12.5px}
+.sc a.who{margin-top:4px;text-align:center;background:var(--acc2);color:#fff;border-radius:9px;padding:7px;font-weight:700;font-size:14px;text-decoration:none}
+details.more{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:0 0 22px}details.more summary{cursor:pointer;font-weight:700}
+</style>
+<script>
+(function(){
+ function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+ function mv(n){if(n==null)return"-";return n>=1e9?"$"+(n/1e9).toFixed(1)+"B":n>=1e6?"$"+(n/1e6).toFixed(1)+"M":n>=1e3?"$"+Math.round(n/1e3)+"K":"$"+Math.round(n)}
+ function px(n){return n==null?"-":"$"+(n<1?Number(n).toFixed(4):Number(n).toFixed(2))}
+ function sh(n){if(n==null)return"-";return n>=1e9?(n/1e9).toFixed(1)+"B":n>=1e6?(n/1e6).toFixed(1)+"M":Math.round(n).toLocaleString("en-US")}
+ var I={cash:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/></svg>',val:'<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',off:'<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 12h7M9 16h7" stroke="currentColor" stroke-width="2"/></svg>'};
+ fetch("https://shellwatch.realroofers.workers.dev/list").then(function(r){return r.json()}).then(function(d){
+  var a=(d.trading||[]).slice(0,48);document.getElementById("hcount").textContent=(d.trading||[]).length?"("+(d.trading||[]).length+")":"";
+  document.getElementById("shgrid").innerHTML=a.map(function(x){
+   return '<div class="sc"><div class="t"><b>'+esc(x.ticker)+'</b><span>'+px(x.price)+'</span></div><div class="n">'+esc(x.name)+'</div>'
+    +'<div class="r">'+I.cash+(x.cash!=null?mv(x.cash)+' <em>cash'+(x.cash_as_of?' · '+esc(String(x.cash_as_of).slice(0,7)):'')+'</em>':'<em>cash: reading</em>')+'</div>'
+    +'<div class="r">'+I.val+(x.facts_at||x.shares?mv(x.mktcap)+' <em>value · '+sh(x.shares)+' shares</em>':'<em>value: reading</em>')+'</div>'
+    +'<div class="r">'+I.off+(x.last_offer_date?esc(x.last_offer_date)+' <em>'+esc(String(x.last_offer_form).replace(" (unregistered sale)",""))+'</em>':(x.facts_at?'<em>no offering found</em>':'<em>offering: reading</em>'))+'</div>'
+    +'<a class="who" href="https://8k10q.com/company.html?t='+encodeURIComponent(x.ticker)+'">Who is the shell &rarr;</a></div>'}).join("")||'<p>The list fills in as each annual report is read.</p>'})
+ .catch(function(){document.getElementById("shgrid").innerHTML='<p>Could not load the shells. <a href="/shells.html">Try the full list.</a></p>'});
+})();
+</script>
+
+<details class="more"><summary>What is a shell company? (read more)</summary>
+<p style="margin:8px 0 0">A public company with <b>no real business</b>: no or nominal operations, and little or nothing in assets beyond cash. It still has a ticker, stockholders and a seat on the market, which is what makes it valuable to whoever takes control. Shells are a known tool for hiding who is in control and for laundering money. That is the SEC&rsquo;s own test (17 CFR 240.12b-2), and every annual report must say yes or no.</p>
+</details>
 
 <div class="tiles">
   <a class="tile" href="/shells.html"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><b>The shell list</b><small>Shells that are trading now, with price and volume. Click any one for details.</small><span class="soon" style="color:#2a9d4b;border-color:#2a9d4b">Live, growing daily</span></a>
@@ -134,7 +172,7 @@ footer a{color:var(--acc2)}
 <footer>
   Facts from the companies&rsquo; own SEC filings. Nothing here is investment advice, and a company&rsquo;s appearance on any list says nothing about wrongdoing.
   Shell Market works with <a href="https://8k10q.com/">8K10Q</a> and <a href="https://warrantwire.com/">Warrant Wire</a>.
-  <br>Built 2026-10-21 · shellmkt home-1d (money laundering in the meta and lead, as a known use of shells; no company accused)
+  <br>Built 2026-11-15 · shellmkt home-2a · home-1d 2026-10-21 (money laundering in the meta and lead, as a known use of shells; no company accused)
 </footer>
 </div>
 </body>
