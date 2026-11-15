@@ -53,6 +53,7 @@ dt{font-weight:700;margin-top:12px}
 dd{margin:4px 0 0;color:var(--ink2)}
 footer{margin-top:36px;font-size:13.5px;color:var(--ink2);border-top:1px solid var(--line);padding-top:14px}
 footer a{color:var(--acc2)}
+.spac{font-size:12.5px;line-height:1.4;margin:2px 0 6px;padding:6px 8px;border-left:3px solid #e0a63a;background:rgba(224,166,58,.08);opacity:.95}/* spac-1a */
 .via{margin:6px 0 0;font-size:12px;opacity:.65;text-align:center}/* via-1a 15 Nov 2026 */
 </style>
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -98,6 +99,7 @@ footer a{color:var(--acc2)}
 .sc .r.sleep{color:#e0a63a}.sc .r.sleep b{letter-spacing:.06em}
 .sc a.who{margin-top:4px;text-align:center;background:var(--acc2);color:#fff;border-radius:9px;padding:7px;font-weight:700;font-size:14px;text-decoration:none}
 details.more{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:0 0 22px}details.more summary{cursor:pointer;font-weight:700}
+.spac{font-size:12.5px;line-height:1.4;margin:2px 0 6px;padding:6px 8px;border-left:3px solid #e0a63a;background:rgba(224,166,58,.08);opacity:.95}/* spac-1a */
 .via{margin:6px 0 0;font-size:12px;opacity:.65;text-align:center}/* via-1a 15 Nov 2026 */
 </style>
 <script>
@@ -115,7 +117,7 @@ details.more{background:var(--card);border:1px solid var(--line);border-radius:1
  fetch("https://shellwatch.realroofers.workers.dev/list").then(function(r){return r.json()}).then(function(d){
   var a=(d.trading||[]).slice(0,24);document.getElementById("hcount").textContent=(d.trading||[]).length?"("+(d.trading||[]).length+")":"";
   document.getElementById("shgrid").innerHTML=a.map(function(x){
-   return '<div class="sc"><div class="t"><b>'+esc(x.ticker)+'</b><span>'+px(x.price)+'</span></div><div class="n">'+esc(x.name)+'</div>'
+   return '<div class="sc"><div class="t"><b>'+esc(x.ticker)+'</b><span>'+px(x.price)+'</span></div><div class="n">'+esc(x.name)+'</div>'+(/\bAcquisition\b|blank check/i.test(x.name+' '+(x.sic_desc||''))||String(x.sic||'')==='6770'?'<div class="spac"><b>Blank check (SPAC):</b> no business of its own. It raises money, holds it in trust, and has about two years to merge with a private company. No deal, the money goes back.</div>':'')
     +'<div class="r">'+I.cash+(x.cash!=null?mv(x.cash)+' <em>cash'+(x.cash_as_of?' · '+esc(String(x.cash_as_of).slice(0,7)):'')+'</em>':'<em>cash: reading</em>')+'</div>'
     +'<div class="r">'+I.val+(x.facts_at||x.shares?mv(x.mktcap)+' <em>value · '+sh(x.shares)+' shares</em>':'<em>value: reading</em>')+'</div>'
     +'<div class="r">'+I.off+(x.last_offer_date?esc(x.last_offer_date)+' <em>'+esc(String(x.last_offer_form).replace(" (unregistered sale)",""))+'</em>':(x.facts_at?'<em>no offering found</em>':'<em>offering: reading</em>'))+'</div>'
